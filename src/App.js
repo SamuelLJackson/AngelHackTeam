@@ -6,6 +6,7 @@ import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
+import miner from './images/miner.jpg';
 
 class App extends Component {
   constructor(props) {
@@ -56,7 +57,7 @@ class App extends Component {
         simpleStorageInstance = instance
 
         // Stores a given value, 5 by default.
-        return simpleStorageInstance.set(5, {from: accounts[0]})
+        return simpleStorageInstance.set(100, {from: accounts[0]})
       }).then((result) => {
         // Get the value from the contract to prove it worked.
         return simpleStorageInstance.get.call(accounts[0])
@@ -68,25 +69,36 @@ class App extends Component {
   }
 
   render() {
+    let imgUrl = 'https://new.consensys.net/wp-content/themes/consensys/client/images/masthead-organic-poster.jpg';
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
+            <a href="#" className="pure-menu-heading pure-menu-link">Token Bones</a>
         </nav>
-
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-              <p>Your Truffle Box is installed and ready.</p>
-              <h2>Smart Contract Example</h2>
-              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
-              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
+            <img src={'https://media.istockphoto.com/vectors/cartoon-dwarf-miner-vector-id839970312'} 
+            style={{width:50,height:50}}/>
+            <div style={{backgroundImage: 'url(' + imgUrl + ')',
+                  height:800,
+                  display:'flex',
+                  justifyContent:'center'}}>
+              <h1 style={{
+                color:'white',
+                alignSelf:'center'
+                }}>A minable proof of work proof of work token for oracles</h1>
+            </div>
+              <h3>What is it?</h3>
+              <h3>Ether to USD value</h3>
+              <h3>How does it work?</h3>
+              <h3>Download a miner!</h3>
               <p>The stored value is: {this.state.storageValue}</p>
             </div>
           </div>
         </main>
       </div>
+
     );
   }
 }

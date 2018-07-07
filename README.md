@@ -1,6 +1,5 @@
 ![Header Image](https://github.com/SamuelLJackson/AngelHackTeam/blob/master/MOTHeader.PNG)
 
-<br>
 ## Overview
 <b>"Minable Oracle Token (or MOT)</b> is an oracle schema that implements a mineable proof of work (POW) competiton to determine the validity of data outside of the blockchain.  Once aggregated, validated, and processed into a consumable output, these oracle data entries will be internally referred to as 'truthpoints'.  
 

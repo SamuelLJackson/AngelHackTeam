@@ -8,35 +8,43 @@ import "./Token.sol";
  */
 contract OracleToken is Token {
 
-    event Mine(address indexed to, uint value);
+    
+    /*Variables*/
 
     bytes32 public currentChallenge;
     uint public timeOfLastProof; // time of last challenge solved
     uint256 public difficulty = 2**256 - 1; // Difficulty starts low
     uint256 public baseReward = 1;
     bool public incrementalRewards = true;
-    Token public token;
+    uint count;
+
     uint maxRewardPercent = 50;
     address owner;
     string oracleName;
     mapping(uint => uint) values;
-    uint[5] last_five_values;
+    uint[5] first_five_values;
+    uint[5] first_five;
+    mapping(uint => uint[5]) timevalues;
+    mapping(uint => address) winner;
+    uint[5] last5times;
 
+    /*Events*/
+    event Mine(address indexed to, uint value);
 
+    /*Functions*/
     /**
      * @dev Constructor that sets the passed value as the token to be mineable.
      * @param _token ERC20 ERC20 compatible token
      */
-    function OracleToken(Token _token) {
-        token = _token;
+    Constructor() public{
         timeOfLastProof = now;
         owner = msg.sender;
     }
 
-      modifier onlyOwner() {
+    modifier onlyOwner() {
     require(msg.sender == owner);
     _;
-  }
+   }
 
 
   /**
@@ -132,54 +140,48 @@ contract OracleToken is Token {
      * @param nonce uint
      * @return uint The amount rewarded
      */
-    function proofOfWork(uint nonce, uint[5] _last5) returns (uint256 reward) {
+    function proofOfWork(uint nonce, uint value) returns (uint256 reward) {
         bytes32 n = sha3(nonce, currentChallenge); // generate random hash based on input
         if (n > bytes32(difficulty)) revert();
-
         uint timeSinceLastProof = (now - timeOfLastProof); // Calculate time since last reward
         if (timeSinceLastProof < 5 seconds) revert(); // Do not reward too quickly
 
         reward = calculateReward();
-
         token.transfer(msg.sender, reward); // reward to winner grows over time
-
         difficulty = difficulty * 10 minutes / timeSinceLastProof + 1; // Adjusts the difficulty
 
-        timeOfLastProof = now;
-        currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1)); // Save hash for next proof
 
-        Mine(msg.sender, reward); // execute an event reflecting the change
+        timeOfLastProof = now - (now % 3600);
 
-
-        last5times[4] = last5times[3];
-        last5times[3] = last5times[2];
-        last5times[2] = last5times[1];
-        last5times[1] = last5times[0];
-        last5times[0] = timeOfLastProof;
-        for(i=0;i<5;i++){
-            timevalues(last5times[i]).push(_last5[i]);
+        if (count<5) {
+           first_five_values.push(value);
+           first_five.push(msg.sender);
+           count++;  
+        } if(count=5) {
+            pushValue(timeOfLastProof)
+            Mine(msg.sender, reward); // execute an event reflecting the change
+           winner[timeOfLastProof] = msg.sender;
         }
-        pushValue(last5times[4]);
-
-        winner[timeOfLastProof] = msg.sender;
-
+        else {
+        currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1)); // Save hash for next proof
+        }
+        
         return reward;
     }
 
     function pushValue(_time) internal {
         quicksort(timevalues[_time]);
         uint med_value = timevalues[2];
-
         values[_time] = med_value;
+
+        
     }
 
-        function retrieveData(uint _timestamp) public constant returns (uint) {
+    function retrieveData(uint _timestamp) public constant returns (uint) {
         return values[_timestamp];
     }
 
-    mapping(uint => uint[5]) timevalues;
-    mapping(uint => address) winner;
-    uint[5] last5times;
+
 
      function quickSort(uint[] storage arr, uint left, uint right) internal {
         uint i = left;
@@ -199,4 +201,7 @@ contract OracleToken is Token {
         if (i < right)
             quickSort(arr, i, right);
     }
+
+
+    
 }

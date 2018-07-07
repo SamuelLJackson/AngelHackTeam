@@ -1,19 +1,20 @@
 pragma solidity ^0.4.21;
 
-
-contract ERC20 is ERC20Basic {
+contract ERC20  {
 
     uint public total_supply;
     address owner;
-
-	event Approval(address indexed owner, address indexed spender, uint256 value);
+    mapping(address => uint) internal balances;
+    mapping(address => mapping (address => uint)) internal allowed;
+    
+    event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     /**
      * @dev Constructor that sets the passed value as the token to be mineable.
-     * @param _token ERC20 ERC20 compatible token
+
      */
-    Constructor() {
+    constructor() public{
         owner = msg.sender;
     }
 
@@ -25,7 +26,6 @@ contract ERC20 is ERC20Basic {
     function balanceOf(address _owner) public constant returns (uint bal) { 
         return balances[_owner]; 
     }
-
 
     /**
     *@dev Allows for a transfer of tokens to _to

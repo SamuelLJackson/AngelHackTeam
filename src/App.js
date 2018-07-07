@@ -174,11 +174,11 @@ class App extends Component {
                 }}>Minable Oracle Contract</h1>
             </div>
 
-    <canvas ref={'chart'} height={'400'} width={'600'}></canvas>
-              <h3>What is it?</h3>
-              <h3>Ether to USD value</h3>
-              <h3>How does it work?</h3>
-              <h3>Download a miner!</h3>
+            <h3>Ether to USD value</h3>
+            <canvas ref={'chart'} height={'400'} width={'600'}></canvas>
+            <h3>What is it?</h3>
+            <h3>How does it work?</h3>
+            <h3>Download a miner!</h3>
             </div>
           </div>
         </main>

@@ -25,6 +25,12 @@ module.exports = {
       provider: new HDWalletProvider(mnemonic, "https://ropsten.infura.io"),
       network_id: 3,
       gas: 4612388
+    },
+      rinkeby: {
+      provider: new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/zkGX3Vf8njIXiHEGRueB"),
+      network_id: 4,
+      gas: 4700000,
+      gasPrice: 17e9
     }
   }
 };

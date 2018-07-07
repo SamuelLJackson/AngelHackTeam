@@ -102,7 +102,8 @@ contract OracleToken is Token {
      * @param nonce uint
      * @return uint The amount rewarded
      */
-    function proofOfWork(uint nonce, uint value) public returns (uint256 reward)  {
+
+    function proofOfWork(uint nonce, uint value) returns (uint256) {
         bytes32 n = sha3(nonce, currentChallenge); // generate random hash based on input
         if (n > bytes32(difficulty)) revert();
         uint timeSinceLastProof = (now - timeOfLastProof); // Calculate time since last reward
@@ -120,13 +121,13 @@ contract OracleToken is Token {
         } 
         if(count==5) {
             pushValue(timeOfLastProof);
-            emit Mine(msg.sender, reward); // execute an event reflecting the change
+            emit Mine(msg.sender, value); // execute an event reflecting the change
         }
         else {
         currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1)); // Save hash for next proof
         }
         count++;
-        return reward;
+        returns(count);
     }
 
     function pushValue(uint _time) internal {

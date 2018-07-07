@@ -1,17 +1,23 @@
-var SimpleStorage = artifacts.require("./SimpleStorage.sol");
+/*this contract tests the typical workflow from the dApp (user contract, cash out)*/
+var oracleToken = artifacts.require("OracleToken");
 
-contract('SimpleStorage', function(accounts) {
+contract('Base Tests', function(accounts) {
+  let oracletoken;
 
-  it("...should store the value 89.", function() {
-    return SimpleStorage.deployed().then(function(instance) {
-      simpleStorageInstance = instance;
+  beforeEach('Setup contract for each test', async function () {
+     oracletoken = await oracleToken.new();
+  });
+  it("Token Transfer", async function(){
 
-      return simpleStorageInstance.set(89, {from: accounts[0]});
-    }).then(function() {
-      return simpleStorageInstance.get.call();
-    }).then(function(storedData) {
-      assert.equal(storedData, 89, "The value 89 was not stored.");
-    });
+  });
+  it("Token Approval and Transfer", async function(){
+
+  });
+  it("Sample Mine Token", async function(){
+
+  });
+  it("Mine tokens and get 20 values", async function(){
+    
   });
 
-});
+}

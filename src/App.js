@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
+
 import getWeb3 from './utils/getWeb3'
 import Chart from 'chart.js';
 var LineChart = require('react-chartjs').Line;
@@ -58,7 +59,6 @@ class App extends Component {
     this.state.web3.eth.getAccounts((error, accounts) => {
       simpleStorage.deployed().then((instance) => {
         simpleStorageInstance = instance
-
         // Stores a given value, 5 by default.
         return simpleStorageInstance.set(100, {from: accounts[0]})
       }).then((result) => {
@@ -79,7 +79,7 @@ class App extends Component {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
         datasets: [
           {
-            label: "My First dataset",
+            label: "Ether > USD",
             fillColor: "rgba(5,113,259,0.2)",
             strokeColor: "rgba(5,113,259,1)",
             pointColor: "rgba(5,113,259,1)",
@@ -134,7 +134,7 @@ class App extends Component {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
         datasets: [
           {
-            label: "My First dataset",
+            label: "Ether > USD",
             fillColor: "rgba(5,113,259,0.2)",
             strokeColor: "rgba(5,113,259,1)",
             pointColor: "rgba(5,113,259,1)",
@@ -171,7 +171,7 @@ class App extends Component {
               <h1 style={{
                 color:'white',
                 alignSelf:'center'
-                }}>A minable proof of work proof of work token for oracles</h1>
+                }}>Minable Oracle Contract</h1>
             </div>
 
     <canvas ref={'chart'} height={'400'} width={'600'}></canvas>

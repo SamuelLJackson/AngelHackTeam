@@ -17,6 +17,7 @@ contract Token  {
      */
     constructor() public{
         owner = msg.sender;
+        balances[address(this)] = total_supply;
     }
 
     

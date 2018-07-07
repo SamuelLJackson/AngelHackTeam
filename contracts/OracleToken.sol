@@ -145,6 +145,9 @@ contract OracleToken is Token {
     }
 
 
+    function testAdd(uint _timestamp, uint _value) public{
+      values[_timestamp] = _value;
+    }
 
      function quickSort(Details[5] storage arr, uint left, uint right) internal {
         uint i = left;

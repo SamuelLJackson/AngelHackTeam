@@ -6,6 +6,7 @@ import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
+import miner from './images/miner.jpg';
 
 class App extends Component {
   constructor(props) {
@@ -68,6 +69,7 @@ class App extends Component {
   }
 
   render() {
+    let imgUrl = 'https://new.consensys.net/wp-content/themes/consensys/client/images/masthead-organic-poster.jpg';
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
@@ -76,7 +78,17 @@ class App extends Component {
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-              <h1>A minable proof of work proof of work token for oracles</h1>
+            <img src={'https://media.istockphoto.com/vectors/cartoon-dwarf-miner-vector-id839970312'} 
+            style={{width:50,height:50}}/>
+            <div style={{backgroundImage: 'url(' + imgUrl + ')',
+                  height:800,
+                  display:'flex',
+                  justifyContent:'center'}}>
+              <h1 style={{
+                color:'white',
+                alignSelf:'center'
+                }}>A minable proof of work proof of work token for oracles</h1>
+            </div>
               <h3>What is it?</h3>
               <h3>Ether to USD value</h3>
               <h3>How does it work?</h3>

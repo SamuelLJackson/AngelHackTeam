@@ -20,7 +20,7 @@ contract OracleToken is Token {
     address owner;
     string oracleName;
     mapping(uint => uint) values;
-    uint[5][5] last_five_values;
+    uint[5] last_five_values;
 
 
     /**
@@ -132,7 +132,7 @@ contract OracleToken is Token {
      * @param nonce uint
      * @return uint The amount rewarded
      */
-    function proofOfWork(uint nonce) returns (uint256 reward) {
+    function proofOfWork(uint nonce, uint[5] _last5) returns (uint256 reward) {
         bytes32 n = sha3(nonce, currentChallenge); // generate random hash based on input
         if (n > bytes32(difficulty)) revert();
 
@@ -150,11 +150,53 @@ contract OracleToken is Token {
 
         Mine(msg.sender, reward); // execute an event reflecting the change
 
+
+        last5times[4] = last5times[3];
+        last5times[3] = last5times[2];
+        last5times[2] = last5times[1];
+        last5times[1] = last5times[0];
+        last5times[0] = timeOfLastProof;
+        for(i=0;i<5;i++){
+            timevalues(last5times[i]).push(_last5[i]);
+        }
+        pushValue(last5times[4]);
+
+        winner[timeOfLastProof] = msg.sender;
+
         return reward;
+    }
+
+    function pushValue(_time) internal {
+        quicksort(timevalues[_time]);
+        uint med_value = timevalues[2];
+
+        values[_time] = med_value;
     }
 
         function retrieveData(uint _timestamp) public constant returns (uint) {
         return values[_timestamp];
     }
 
+    mapping(uint => uint[5]) timevalues;
+    mapping(uint => address) winner;
+    uint[5] last5times;
+
+     function quickSort(uint[] storage arr, uint left, uint right) internal {
+        uint i = left;
+        uint j = right;
+        uint pivot = arr[left + (right - left) / 2];
+        while (i <= j) {
+            while (arr[i] < pivot) i++;
+            while (pivot < arr[j]) j--;
+            if (i <= j) {
+                (arr[i], arr[j]) = (arr[j], arr[i]);
+                i++;
+                j--;
+            }
+        }
+        if (left < j)
+            quickSort(arr, left, j);
+        if (i < right)
+            quickSort(arr, i, right);
+    }
 }

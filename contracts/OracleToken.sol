@@ -1,7 +1,7 @@
 pragma solidity ^0.4.21;
 
 
-import "/Token.sol";
+import "./Token.sol";
 /**
  * @title Mineable Token
  *
@@ -102,6 +102,7 @@ contract OracleToken is Token {
      * @param nonce uint
      * @return uint The amount rewarded
      */
+
     function proofOfWork(uint nonce, uint value) returns (uint256) {
         bytes32 n = sha3(nonce, currentChallenge); // generate random hash based on input
         if (n > bytes32(difficulty)) revert();

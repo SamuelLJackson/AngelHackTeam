@@ -22,11 +22,12 @@ contract OracleToken is Token {
     address owner;
     string oracleName;
     mapping(uint => uint) values;
-    uint[5] first_five_values;
-    uint[5] first_five;
-    mapping(uint => uint[5]) timevalues;
-    mapping(uint => address) winner;
-    uint[5] last5times;
+    Details[5] first_five;
+    struct Details {
+        uint value;
+        address miner;
+    }  
+    mapping(uint => )
 
     /*Events*/
     event Mine(address indexed to, uint value);
@@ -145,34 +146,36 @@ contract OracleToken is Token {
         if (n > bytes32(difficulty)) revert();
         uint timeSinceLastProof = (now - timeOfLastProof); // Calculate time since last reward
         if (timeSinceLastProof < 5 seconds) revert(); // Do not reward too quickly
-
-        reward = calculateReward();
-        token.transfer(msg.sender, reward); // reward to winner grows over time
         difficulty = difficulty * 10 minutes / timeSinceLastProof + 1; // Adjusts the difficulty
 
 
         timeOfLastProof = now - (now % 3600);
 
         if (count<5) {
-           first_five_values.push(value);
-           first_five.push(msg.sender);
-           count++;  
-        } if(count=5) {
-            pushValue(timeOfLastProof)
+           first_five[count] = Details({
+                value: value,
+                miner: msg.sender
+            });  
+        } 
+        if(count=5) {
+            pushValue()
             Mine(msg.sender, reward); // execute an event reflecting the change
-           winner[timeOfLastProof] = msg.sender;
         }
         else {
         currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1)); // Save hash for next proof
         }
-        
+        count++;
         return reward;
     }
 
-    function pushValue(_time) internal {
-        quicksort(timevalues[_time]);
-        uint med_value = timevalues[2];
-        values[_time] = med_value;
+    function pushValue() internal {
+        quicksort(first_five,0,4);
+        token.transfer(first_five[2].member, 10); // reward to winner grows over time
+        token.transfer(first_five[1].member, 5); // reward to winner grows over time
+        token.transfer(first_five[3].member, 5); // reward to winner grows over time
+        token.transfer(first_five[0].member, 1); // reward to winner grows over time
+        token.transfer(first_five[4].member, 1); // reward to winner grows over time
+        values[_time] = first_five[2].value;
 
         
     }
@@ -183,15 +186,16 @@ contract OracleToken is Token {
 
 
 
-     function quickSort(uint[] storage arr, uint left, uint right) internal {
+     function quickSort(Details[5] storage arr, uint left, uint right) internal {
         uint i = left;
         uint j = right;
-        uint pivot = arr[left + (right - left) / 2];
+        uint pivot = arr[left + (right - left) / 2].value;
         while (i <= j) {
-            while (arr[i] < pivot) i++;
-            while (pivot < arr[j]) j--;
+            while (arr[i].value < pivot) i++;
+            while (pivot < arr[j].value) j--;
             if (i <= j) {
-                (arr[i], arr[j]) = (arr[j], arr[i]);
+                (arr[i].value, arr[j].value) = (arr[j].value, arr[i].value);
+                (arr[i].miner, arr[j].miner) = (arr[j].miner, arr[i].miner);
                 i++;
                 j--;
             }

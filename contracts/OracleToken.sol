@@ -15,13 +15,9 @@ contract OracleToken is Token {
     bytes32 public currentChallenge;
     uint public timeOfLastProof; // time of last challenge solved
     uint256 public difficulty = 2**256 - 1; // Difficulty starts low
-    uint256 public baseReward = 1;
-    bool public incrementalRewards = true;
     uint count;
-
-    uint maxRewardPercent = 50;
     address owner;
-    string oracleName;
+    string public oracleName;
     mapping(uint => uint) values;
     Details[5] first_five;
     struct Details {
@@ -32,6 +28,7 @@ contract OracleToken is Token {
 
     /*Events*/
     event Mine(address indexed to, uint value);
+    event NewValue(address _miner, uint _value);
 
     /*Functions*/
     /**
@@ -48,7 +45,9 @@ contract OracleToken is Token {
     _;
    }
 
-
+   function getVariables() public constant returns(bytes32, uint){
+    return (currentChallenge,difficulty);
+   }
   /**
    * @dev Allows the current owner to transfer control of the contract to a newOwner.
    * @param newOwner The address to transfer ownership to.
@@ -65,38 +64,6 @@ contract OracleToken is Token {
     function setDifficulty(uint256 _difficulty) onlyOwner public{
         difficulty = _difficulty;
     }
-
-    /**
-     * @dev Change the maximum percent of the total supply that can be rewarded
-     * @param _percent uint Maximum percent of the total supply to be rewarded
-     */
-    function setMaxRewardPercentOfTotal(uint _percent) onlyOwner public {
-        if (_percent < 1 || _percent > 100) revert();
-        maxRewardPercent = _percent;
-    }
-
-    /**
-     * @dev Change the reward
-     * @param _baseReward uint256 base reward given when not incremental
-     */
-    function setBaseReward(uint256 _baseReward) onlyOwner public {
-        baseReward = _baseReward;
-    }
-
-    /**
-     * @dev Change if the reward should increment or not
-     * @param _shouldRewardIncrement bool Wehether the reward should be incremental or not
-     */
-    function isIncremental(bool _shouldRewardIncrement) onlyOwner public {
-        incrementalRewards = _shouldRewardIncrement;
-    }
-
-
-
-
-
-
-
     /**
      * @dev Proof of work to be done for mining
      * @param nonce uint
@@ -118,6 +85,7 @@ contract OracleToken is Token {
                 value: value,
                 miner: msg.sender
             });  
+           NewValue(msg.sender,value);
         } 
         if(count==5) {
             pushValue(timeOfLastProof);

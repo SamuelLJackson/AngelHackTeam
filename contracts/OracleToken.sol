@@ -1,6 +1,7 @@
 pragma solidity ^0.4.21;
 
-import "./Token.sol";
+
+import "/Token.sol";
 /**
  * @title Mineable Token
  *
@@ -26,8 +27,8 @@ contract OracleToken is Token {
     struct Details {
         uint value;
         address miner;
-    }  
-    mapping(uint => )
+    }
+ 
 
     /*Events*/
     event Mine(address indexed to, uint value);
@@ -35,9 +36,9 @@ contract OracleToken is Token {
     /*Functions*/
     /**
      * @dev Constructor that sets the passed value as the token to be mineable.
-     * @param _token ERC20 ERC20 compatible token
+
      */
-    Constructor() public{
+    constructor() public{
         timeOfLastProof = now;
         owner = msg.sender;
     }
@@ -52,7 +53,7 @@ contract OracleToken is Token {
    * @dev Allows the current owner to transfer control of the contract to a newOwner.
    * @param newOwner The address to transfer ownership to.
    */
-  function transferOwnership(address newOwner) onlyOwner {
+  function transferOwnership(address newOwner) onlyOwner public{
     require(newOwner != address(0));
     owner = newOwner;
   }
@@ -61,7 +62,7 @@ contract OracleToken is Token {
      * @dev Change the difficulty
      * @param _difficulty uint256 difficulty to be set
      */
-    function setDifficulty(uint256 _difficulty) onlyOwner {
+    function setDifficulty(uint256 _difficulty) onlyOwner public{
         difficulty = _difficulty;
     }
 
@@ -69,7 +70,7 @@ contract OracleToken is Token {
      * @dev Change the maximum percent of the total supply that can be rewarded
      * @param _percent uint Maximum percent of the total supply to be rewarded
      */
-    function setMaxRewardPercentOfTotal(uint _percent) onlyOwner {
+    function setMaxRewardPercentOfTotal(uint _percent) onlyOwner public {
         if (_percent < 1 || _percent > 100) revert();
         maxRewardPercent = _percent;
     }
@@ -78,7 +79,7 @@ contract OracleToken is Token {
      * @dev Change the reward
      * @param _baseReward uint256 base reward given when not incremental
      */
-    function setBaseReward(uint256 _baseReward) onlyOwner {
+    function setBaseReward(uint256 _baseReward) onlyOwner public {
         baseReward = _baseReward;
     }
 
@@ -86,55 +87,15 @@ contract OracleToken is Token {
      * @dev Change if the reward should increment or not
      * @param _shouldRewardIncrement bool Wehether the reward should be incremental or not
      */
-    function isIncremental(bool _shouldRewardIncrement) onlyOwner {
+    function isIncremental(bool _shouldRewardIncrement) onlyOwner public {
         incrementalRewards = _shouldRewardIncrement;
     }
 
-    /**
-     * @dev Get the balance of the contract
-     * @return returns the number of tokens associated with the contract
-     */
-    function getTokenBalance() returns (uint256) {
-        return token.balanceOf(address(this));
-    }
 
-    /**
-     * @dev Change the token to be mined
-     * @param _newToken ERC20 ERC20-compatible token
-     */
-    function changeToken(ERC20 _newToken) {
-        token = _newToken;
-    }
 
-    /**
-     * @dev Transfer tokens out of the contract
-     * @param _to address Address being transfered to
-     * @param _amount uint256 Amount of tokens being transfered
-     */
-    function transfer(address _to, uint256 _amount) onlyOwner {
-        token.transfer(_to, _amount);
-    }
 
-    /**
-     * @dev Calculate the reward
-     * @return uint256 Returns the amount to reward
-     */
-    function calculateReward() returns (uint256 reward) {
-        uint256 totalSupply = getTokenBalance();
 
-        /* Check if we are incrementing reward */
-        if (incrementalRewards == true) {
-            uint maxReward = (totalSupply * maxRewardPercent/100);
-            reward = (totalSupply * (now - timeOfLastProof) / 1 years);
-            if (reward > maxReward) reward = maxReward; // Make sure reward does not exceed maximum percent
-        } else {
-            reward = baseReward;
-        }
 
-        if (reward > totalSupply) return totalSupply;
-
-        return reward;
-    }
 
     /**
      * @dev Proof of work to be done for mining
@@ -157,9 +118,9 @@ contract OracleToken is Token {
                 miner: msg.sender
             });  
         } 
-        if(count=5) {
-            pushValue()
-            Mine(msg.sender, reward); // execute an event reflecting the change
+        if(count==5) {
+            pushValue(timeOfLastProof);
+            emit Mine(msg.sender, reward); // execute an event reflecting the change
         }
         else {
         currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1)); // Save hash for next proof
@@ -168,16 +129,14 @@ contract OracleToken is Token {
         return reward;
     }
 
-    function pushValue() internal {
-        quicksort(first_five,0,4);
-        token.transfer(first_five[2].member, 10); // reward to winner grows over time
-        token.transfer(first_five[1].member, 5); // reward to winner grows over time
-        token.transfer(first_five[3].member, 5); // reward to winner grows over time
-        token.transfer(first_five[0].member, 1); // reward to winner grows over time
-        token.transfer(first_five[4].member, 1); // reward to winner grows over time
+    function pushValue(uint _time) internal {
+        quickSort(first_five,0,4);
+        transfer(first_five[2].miner, 10); // reward to winner grows over time
+        transfer(first_five[1].miner, 5); // reward to winner grows over time
+        transfer(first_five[3].miner, 5); // reward to winner grows over time
+        transfer(first_five[0].miner, 1); // reward to winner grows over time
+        transfer(first_five[4].miner, 1); // reward to winner grows over time
         values[_time] = first_five[2].value;
-
-        
     }
 
     function retrieveData(uint _timestamp) public constant returns (uint) {

@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
+import Chart from 'chart.js';
+var LineChart = require('react-chartjs').Line;
 
 import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
-import miner from './images/miner.jpg';
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +15,8 @@ class App extends Component {
 
     this.state = {
       storageValue: 0,
-      web3: null
+      web3: null,
+      chart:null
     }
   }
 
@@ -34,6 +36,7 @@ class App extends Component {
     .catch(() => {
       console.log('Error finding web3.')
     })
+    
   }
 
   instantiateContract() {
@@ -67,9 +70,91 @@ class App extends Component {
       })
     })
   }
-
+  componentDidMount () {
+    let chartCanvas = this.refs.chart;
+  
+    let myChart = new Chart(chartCanvas, {
+      type: 'line',
+      data: {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+          {
+            label: "My First dataset",
+            fillColor: "rgba(5,113,259,0.2)",
+            strokeColor: "rgba(5,113,259,1)",
+            pointColor: "rgba(5,113,259,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(5,113,259,1)",
+            data: [65, 59, 80, 81, 56, 55, 40]
+          }
+        ]
+      },
+      options: {
+        ///Boolean - Whether grid lines are sho across the chart
+        scaleShowGridLines : true,
+        //String - Colour of the grid lines
+        scaleGridLineColor : "rgba(0,0,0,.05)",
+        //Number - Width of the grid lines
+        scaleGridLineWidth : 1,
+        //Boolean - Whether to show horizontal lines (except X axis)
+        scaleShowHorizontalLines: true,
+        //Boolean - Whether to show vertical lines (except Y axis)
+        scaleShowVerticalLines: true,
+        //Boolean - Whether the line is curved between points
+        bezierCurve : true,
+        //Number - Tension of the bezier curve between points
+        bezierCurveTension : 0.4,
+        //Boolean - Whether to show a dot for each point
+        pointDot : true,
+        //Number - Radius of each point dot in pixels
+        pointDotRadius : 4,
+        //Number - Pixel width of point dot stroke
+        pointDotStrokeWidth : 1,
+        //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+        pointHitDetectionRadius : 20,
+        //Boolean - Whether to show a stroke for datasets
+        datasetStroke : true,
+        //Number - Pixel width of dataset stroke
+        datasetStrokeWidth : 2,
+        //Boolean - Whether to fill the dataset with a colour
+        datasetFill : true,
+        //String - A legend template
+        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
+        //Boolean - Whether to horizontally center the label and point dot inside the grid
+        offsetGridLines : false
+      }
+    });
+  
+    this.setState({chart: myChart});
+  }
+  componentDidUpdate () {
+      let chart = this.state.chart;
+      let data = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+          {
+            label: "My First dataset",
+            fillColor: "rgba(5,113,259,0.2)",
+            strokeColor: "rgba(5,113,259,1)",
+            pointColor: "rgba(5,113,259,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(5,113,259,1)",
+            data: [65, 59, 80, 81, 56, 55, 40]
+          }
+        ]
+      }
+  
+      data.datasets.forEach((dataset, i) => chart.data.datasets[i].data = dataset.data);
+  
+      chart.data.labels = data.labels;
+      chart.update();
+  }
   render() {
     let imgUrl = 'https://new.consensys.net/wp-content/themes/consensys/client/images/masthead-organic-poster.jpg';
+    let minerImageUrl = 'https://media.istockphoto.com/vectors/cartoon-dwarf-miner-vector-id839970312';
+
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
@@ -78,10 +163,9 @@ class App extends Component {
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-            <img src={'https://media.istockphoto.com/vectors/cartoon-dwarf-miner-vector-id839970312'} 
-            style={{width:50,height:50}}/>
             <div style={{backgroundImage: 'url(' + imgUrl + ')',
                   height:800,
+                  width:'100%',
                   display:'flex',
                   justifyContent:'center'}}>
               <h1 style={{
@@ -89,11 +173,12 @@ class App extends Component {
                 alignSelf:'center'
                 }}>A minable proof of work proof of work token for oracles</h1>
             </div>
+
+    <canvas ref={'chart'} height={'400'} width={'600'}></canvas>
               <h3>What is it?</h3>
               <h3>Ether to USD value</h3>
               <h3>How does it work?</h3>
               <h3>Download a miner!</h3>
-              <p>The stored value is: {this.state.storageValue}</p>
             </div>
           </div>
         </main>

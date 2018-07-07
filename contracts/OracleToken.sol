@@ -127,7 +127,7 @@ contract OracleToken is Token {
         currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1)); // Save hash for next proof
         }
         count++;
-        returns(count);
+        return (count);
     }
 
     function pushValue(uint _time) internal {

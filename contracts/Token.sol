@@ -1,6 +1,7 @@
 pragma solidity ^0.4.21;
 
-contract ERC20  {
+
+contract Token  {
 
     uint public total_supply;
     address owner;
@@ -95,3 +96,4 @@ contract ERC20  {
     }
 
 }
+

@@ -9,6 +9,11 @@ import requests,json, time,random
 import pandas as pd
 from Naked.toolshed.shell import execute_js, muterun_js, run_js
 
+public_address = "0x";
+private_key = "0x";
+contract_address = "0x"
+
+
 def generate_random_number():
     return str(random.randint(1000000,9999999))
 
@@ -39,14 +44,14 @@ def masterMiner():
 		if(nonce > 0):
 			print ("You guessed the hash");
 			value = getAPIvalue();
-			arg_string =""+ str(nonce) + " "+str(value)
-			run_js('ethoracle_date.js',arg_string);
+			arg_string =""+ str(nonce) + " "+str(value)+" "+str(contract_address)+" "+str(public_address)
+			run_js('submitter.js',arg_string);
 		else:
 			pass
 # In[59]:
 
 def getVariables():
-	payload = {"jsonrpc":"2.0","id":3,"method":"eth_call","params":[{"to":"0x177e66ad4cdf0c0f3df92a744a667108bd95c305","data":"0xc16fe907"}, "latest"]}
+	payload = {"jsonrpc":"2.0","id":3,"method":"eth_call","params":[{"to":contract_address,"data":"0x61ca517b"}, "latest"]}
 	r = requests.post("http://40.117.249.181:8545", data=payload);
 
 	return _challenge,_nonce,_difficulty;

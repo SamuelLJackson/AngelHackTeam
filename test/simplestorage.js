@@ -5,14 +5,19 @@ contract('Base Tests', function(accounts) {
   let oracletoken;
 
   beforeEach('Setup contract for each test', async function () {
+     oracletoken = await oracleToken.new();
   });
   it("Token Transfer", async function(){
+
   });
   it("Token Approval and Transfer", async function(){
+
   });
   it("Sample Mine Token", async function(){
+
   });
   it("Mine tokens and get 20 values", async function(){
+    
   });
 
 }

@@ -1,33 +1,34 @@
 ![Header Image](https://github.com/SamuelLJackson/AngelHackTeam/blob/master/MOCHeader.PNG)
 
 ## Overview
-<b>"Minable Oracle Contract (MOC)</b> is an oracle schema that implements a mineable proof of work (POW) competiton.  Once aggregated, validated, and processed into a consumable output, these oracle data entries will be internally referred to as 'truthpoints'.  
+<b>"Minable Oracle Contract" (MOC)</b> is an oracle schema that implements a mineable proof of work (POW) competiton.  Once aggregated, validated, and processed into a consumable output, these oracle data entries will be internally referred to as 'truthpoints'.  
 
-This project draws inspiration from the [EIP918 Mineable Token](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-918.md) as an abstract standard that uses a challenge-driven keccak256 Proof of Work algorithm for token minting and distribution.  
+This project draws high-level inspiration from the [EIP918 Mineable Token](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-918.md) as an abstract standard that uses a challenge-driven keccak256 Proof of Work algorithm for token minting and distribution.  
 
-MOC leverages a novel game-theoretical competition in an attempt to disintermediate and decentralize the existing 3rd party trust layer associated with centralized oracle services like Oraclize, whcih use basic API getters to provide smart-contracts with off-chain data.  This reduces the implicit cost of risk associated with third parties.  For more information, see:
+MOC leverages a proven game-theoretical competition to disintermediate and decentralize the existing 3rd party trust layer associated with centralized oracle services like Oraclize, which use basic API getters to provide smart-contracts with off-chain data.  This reduces the implicit cost of risk associated with third parties.  For more information, see:
 
 > "Trusted third parites are security holes" ~ Nick Szabo, 2001 (https://nakamotoinstitute.org/trusted-third-parties/)
 
 To summarize, by creating an oracle schema that uses an incented construct to derive the validity of off-chain data, we:
   1. <b>Reduce the risks</b> associated with single-party oracle providers, who can cut access to API data, forge message data, etc
   2. <b>Lay the foundation</b> for a superior oracle system where truth data is derived from a distributed set of participants which have both economic interest and 'stake' in the validity and success of the oracle data
-  3. <b>Create</b> an effective, secure, and decentralized oracle system which inputs data from multiple parties and disincentives incorrect submissions
+  3. <b>Create</b> an effective, secure, and decentralized oracle system which inputs data from multiple parties and disincentives dispersion and adversarial submissions
+
 
 ## How It Works
 Users engage in a POW competion to find a nonce which satisifies the requirement of the challenge.  The users who find a nonce which correctly solves the POW puzzle input data for the POW Oracle contract and recieve native tokens in exchange for their work.  The oracle data submissions are stored in contract memory as an array - which is subsequently operated upon to derive the median for the sample. In this implementation the amount of samples recorded may be stated as N=5.  
 
 Each datapoint is expressed as an integer with a median timestamp describing the point in time that the oracle truth corresponds to.  On average, these oracle truths are mined and recorded at an interval dynamically adjusted to correspond to the total work inputted - so that truthpoints (represented as values stored for P sub n variables) may be expressed in a timeseries array fed into another contract, or visualized in a front-end through an event.
 
+
 ### The Oracle Mining Process
-MOC implements a quadriphasic approach to token mining and minting.  The current challenge, adjusted difficulty, count, and proof since last timestamp are all called during the proofOfWork operation.
+MOC implements a quadriphasic approach to token mining and minting.  The current challenge, adjusted difficulty, count, and proof since last timestamp are all called during the 'proofOfWork' operation.
 
-As explained in the initial section, MOC uses a native token as a reward for miners who solve the POW challenge and subsequently input data for the contract.  XXX is required to report on the off-chain pracle data to be used in a smart-contract.  
+As explained in the initial section, MOC uses a native token as a reward for miners who solve the POW challenge and subsequently input data for the contract.  Thistoken inherets from the ERC-20 contract standard for fungible tokens, as may be seen in the 'contracts' hierarchy.
 
-The mining process is expressed as:
+The mining process is formally expressed as:
 
-```
-
+```solidity
 function proofOfWork(bytes nonce, uint value) returns (uint256) {
         bytes32 n = sha3(currentChallenge,msg.sender,nonce); // generate random hash based on input
         if (uint(n) % difficulty !=0) revert();
@@ -52,7 +53,6 @@ function proofOfWork(bytes nonce, uint value) returns (uint256) {
         count++;
         return (count);
     }
-
 ```
 
 An implementation of the miner is descrbed in python in the 'miner' sub directory.  In 'miner.py', the script imports the web3 library, pandas, and various other dependencies to solve the keccak256 puzzle.  In submitter.js, the nonce value inputs are submitted to the smart contract on chain.  To examine the mining script, navigate [here](https://github.com/SamuelLJackson/AngelHackTeam/blob/master/miner/miner.py).
@@ -63,8 +63,7 @@ The Reward schema is an essential component of MOC.  The schema is designed to i
 
 This Reward schema is expressed in the contract, here:
 
-```
-
+```solidity
 function pushValue(uint _time) internal {
         quickSort(first_five,0,4);
         transfer(first_five[2].miner, 10); // reward to winner grows over time
@@ -73,7 +72,6 @@ function pushValue(uint _time) internal {
         transfer(first_five[0].miner, 1); // reward to winner grows over time
         transfer(first_five[4].miner, 1); // reward to winner grows over time
         values[_time] = first_five[2].value;
-
 ```
 
 It may be visualized as so:
@@ -94,6 +92,13 @@ As MOC is a contract mechanism that allows oracle data to be derived in a comept
 6. <b>Damage verification:</b> What were the net total results in damage for insurance contracts
 7. <b>Pseudorandom number generation:</b> to select a winner in a distributed-lottery smart contract, etc.
 
+## Visualizing the Output (UX)
+
+   website clickthrough gifs go here
+
 ## Conclusion
 
 lorem ipsum
+
+### Copyright
+Copyright and related rights waived via CC0.

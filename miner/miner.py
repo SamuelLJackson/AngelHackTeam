@@ -9,7 +9,7 @@ import requests,json, time,random
 import pandas as pd
 from Naked.toolshed.shell import execute_js, muterun_js, run_js
 
-public_address = "0x";
+public_address = "0xe010ac6e0248790e08f42d5f697160dedf97e024";
 private_key = "3a10b4bc1258e8bfefb95b498fb8c0f0cd6964a811eabca87df5630bcacd7216";
 contract_address = "0xe7dd7e79548817695e89fb418e748fdfef34f3b7"
 
@@ -58,9 +58,21 @@ def masterMiner():
 
 def getVariables():
 	payload = {"jsonrpc":"2.0","id":3,"method":"eth_call","params":[{"to":contract_address,"data":"0x94aef022"}, "latest"]}
-	r = requests.post("https://rinkeby.infura.io/", data=payload);
-	print(r);
-	#return _challenge,_nonce,_difficulty;
+	r = requests.post("https://rinkeby.infura.io/", data=json.dumps(payload));
+	print(r.content)
+	val = r.content
+	val2 = val[100:]
+	val1 = val[34:99]
+	print(val1);
+	val3 = bytes_to_int(val2)
+	print(val3)
+	#return _challenge,_difficulty;
 
+def bytes_to_int(bytes):
+    result = 0
 
+    for b in bytes:
+        result = result * 256 + int(b)
+
+    return result
 getVariables()

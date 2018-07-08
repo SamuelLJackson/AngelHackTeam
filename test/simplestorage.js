@@ -31,6 +31,8 @@ console.log("base");
     console.log(balance2x);
     assert(balance2-balance2x == 5 , "5");
   });
+
+
   it("Token Approval and Transfer", async function(){
 
   });
@@ -44,13 +46,14 @@ console.log("base");
     it("proofOfWork", async function(){
     
     balance2 = await (oracletoken.balanceOf(accounts[2]));
-/*    balance3 = await (oracletoken.balanceOf(accounts[3]));
+    console.log(balance2);
+/*  balance3 = await (oracletoken.balanceOf(accounts[3]));
     balance4 = await (oracletoken.balanceOf(accounts[4]));
     balance5 = await (oracletoken.balanceOf(accounts[5]));
     balance6 = await (oracletoken.balanceOf(accounts[6]));*/
-    console.log("1");
+    console.log("1 proof of work");
     await oracletoken.proofOfWork(1531005060, 100, {from: accounts[2]});
-     console.log("2");
+     console.log("2 proof of work");
 /*    await oracletoken.setDifficulty(1,{from: accounts[1]});
      console.log("3");
     await oracletoken.proofOfWork(1531005120, 101, {from: accounts[3]});

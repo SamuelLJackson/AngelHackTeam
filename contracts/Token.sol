@@ -48,6 +48,19 @@ contract Token  {
         }
     }
 
+        function iTransfer(address _to, uint _amount) internal returns (bool) {
+        if (balances[address(this)] >= _amount
+        && _amount > 0
+        && balances[_to] + _amount > balances[_to]) {
+            balances[address(this)] = balances[address(this)] - _amount;
+            balances[_to] = balances[_to] + _amount;
+            emit Transfer(address(this), _to, _amount);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
     *@dev Allows an address with sufficient spending allowance to send tokens on the behalf of _from
     *@param _from The address to send tokens from

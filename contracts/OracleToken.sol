@@ -14,7 +14,7 @@ contract OracleToken is Token {
 
     bytes32 public currentChallenge;
     uint public timeOfLastProof; // time of last challenge solved
-    uint256 public difficulty = 2**256 - 1; // Difficulty starts low
+    uint256 public difficulty = 1; // Difficulty starts low
     uint count;
     address owner;
     string public oracleName;
@@ -71,21 +71,18 @@ contract OracleToken is Token {
      */
 
     function proofOfWork(uint nonce, uint value) returns (uint256) {
-        bytes32 n = sha3(nonce, currentChallenge); // generate random hash based on input
-        if (n > bytes32(difficulty)) revert();
+        bytes32 n = sha3(currentChallenge,msg.sender,nonce); // generate random hash based on input
+        if (uint(n) % difficulty !=0) revert();
         uint timeSinceLastProof = (now - timeOfLastProof); // Calculate time since last reward
         if (timeSinceLastProof < 5 seconds) revert(); // Do not reward too quickly
-        difficulty = difficulty * 10 minutes / timeSinceLastProof + 1; // Adjusts the difficulty
-
-
-        timeOfLastProof = now - (now % 3600);
-
+        difficulty = difficulty * 10 minutes / timeSinceLastProof + 1; // Adjusts the difficult
+        timeOfLastProof = now - (now % 60);
         if (count<5) {
            first_five[count] = Details({
                 value: value,
                 miner: msg.sender
             });  
-           NewValue(msg.sender,value);
+           emit NewValue(msg.sender,value);
         } 
         if(count==5) {
             pushValue(timeOfLastProof);

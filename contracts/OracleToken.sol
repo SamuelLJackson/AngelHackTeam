@@ -75,7 +75,7 @@ contract OracleToken is Token {
         if (uint(n) % difficulty !=0) revert();
         uint timeSinceLastProof = (now - timeOfLastProof); // Calculate time since last reward
         if (timeSinceLastProof < 5 seconds) revert(); // Do not reward too quickly
-        difficulty = difficulty * 10 minutes / timeSinceLastProof + 1; // Adjusts the difficult
+        difficulty = difficulty * 30 seconds / timeSinceLastProof + 1; // Adjusts the difficult
         timeOfLastProof = now - (now % 60);
         if (count<5) {
            first_five[count] = Details({

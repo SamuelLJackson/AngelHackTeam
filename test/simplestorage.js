@@ -8,11 +8,13 @@ contract('Base Tests', function(accounts) {
      oracletoken = await oracleToken.new();
   });
   it("proofOfWork", async function(){
+    var _date = Date.now()/1000- (Date.now()/1000)%3600;
     balance2 = await (oracletoken.balanceOf(accounts[2]));
     balance3 = await (oracletoken.balanceOf(accounts[3]));
     balance4 = await (oracletoken.balanceOf(accounts[4]));
     balance5 = await (oracletoken.balanceOf(accounts[5]));
     balance6 = await (oracletoken.balanceOf(accounts[6]));
+    await oracletoken.addValue(_date, value, {from: accounts[2]});
     await oracletoken.proofOfWork(1, 100, {from: accounts[2]});
     await oracletoken.proofOfWork(2, 101, {from: accounts[3]});
     await oracletoken.proofOfWork(3, 102, {from: accounts[4]});
@@ -30,6 +32,10 @@ contract('Base Tests', function(accounts) {
     assert.equal(balance3-balance3x, 10, "balance should be one for acct3");
   });
 
+
+  it("testAdd", async function(){
+     await testAdd(1531005060, 1);
+  });
   it("Token Transfer", async function(){
 
   });

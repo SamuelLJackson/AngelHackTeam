@@ -1,7 +1,7 @@
 ![Header Image](https://github.com/SamuelLJackson/AngelHackTeam/blob/master/MOCHeader.PNG)
 
 ## Overview
-<b>"Minable Oracle Contract" (MOC)</b> is an oracle schema that implements a mineable proof of work (POW) competiton.  Once aggregated, validated, and processed into a consumable output, these oracle data entries will be internally referred to as 'truthpoints'.  
+<b>"Minable Oracle Contract" (MOC)</b> is an oracle schema that implements a mineable proof of work (POW) competiton.  Once aggregated, validated, and processed into a consumable output - these oracle data entries will be internally referred to as 'truthpoints'.  
 
 This project draws high-level inspiration from the [EIP918 Mineable Token](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-918.md) as an abstract standard that uses a challenge-driven keccak256 Proof of Work algorithm for token minting and distribution.  
 
@@ -18,7 +18,9 @@ To summarize, by creating an oracle schema that uses an incented construct to de
 ## How It Works
 Users engage in a POW competion to find a nonce which satisifies the requirement of the challenge.  The users who find a nonce which correctly solves the POW puzzle input data for the POW Oracle contract and recieve native tokens in exchange for their work.  The oracle data submissions are stored in contract memory as an array - which is subsequently operated upon to derive the median for the sample. In this implementation the amount of samples recorded may be stated as N=5.  
 
-Each datapoint is expressed as an integer with a median timestamp describing the point in time that the oracle truth corresponds to.  On average, these oracle truths are mined and recorded at an interval dynamically adjusted to correspond to the total work inputted - so that truthpoints (represented as values stored for P sub n variables) may be expressed in a timeseries array fed into another contract, or visualized in a front-end through an event.
+Each input value is expressed as an integer with a median timestamp describing the point in time that the oracle truth corresponds to.  On average, these oracle truths are mined and recorded at an interval dynamically adjusted to correspond to the total work inputted - so that truthpoints (represented as values stored for P sub n variables) may be expressed in a timeseries array fed into another contract, or visualized in a front-end through an event (see UX section for an example).
+
+To ensure scalability and maximize usage potential, the smart-contract has been designed ground-up using the principle of 'gas-minimization'.  The contract is currently deployed on the both the Kovan and Rinkeby Ethereum testnets. We encourage testing, security auditing, and UX critiques.
 
 
 ### The Oracle Mining Process
@@ -92,13 +94,28 @@ As MOC is a contract mechanism that allows oracle data to be derived in a comept
 6. <b>Damage verification:</b> What were the net total results in damage for insurance contracts
 7. <b>Pseudorandom number generation:</b> to select a winner in a distributed-lottery smart contract, etc.
 
+
 ## Visualizing the Output (UX)
 
-   website clickthrough gifs go here
+To create a proper web UX for MOC, we have created a basic web3 portal which includes a project description coupled with live contract getters and visualizations.  Our current build leverages Truffle and Web3.js to interface with the Rinkeby and Kovan testnets through remote procedure calls (RPC). In addition, we have elected to use React Framework to style and visualize the state attributes within an enabled web3 browser.
+
+The MOC website is currently hosted (here)[link.].  To interact with the smart-contract, we reccomend using an ingested web3 environment (like MetaMask).  For reference purposes, we have included a few sample loops for the UX below.
+
+<image>
+
+Rinkeby Contract Address:  '0x3Ce33Bc3EbE0358eeb8E4a9F0ebCD7Df4Fea6BFc'
+
+To view transaction history, [see Etherscan](https://rinkeby.etherscan.io/address/0x3ce33bc3ebe0358eeb8e4a9f0ebcd7df4fea6bfc)
+
 
 ## Conclusion
 
-lorem ipsum
+We are happy to report that a successful MOC build has successfully compiled and been deployed to the Rinkeby and Kovan Ethereum testnets. 
+
+This project was a submission to <b>Angel Hack's Washington DC Hackathon</b> hosted on July 7th - 8th.  It was designed, spec'ed, built, and deployed in a 24-hour agile sprint.  As such, there may be security vulnerabilities, bugs, etc. which we are currently unaware of.
+
+We invite you to audit and test our project - and submit any issues to the repo directly.
+
 
 ### Copyright
-Copyright and related rights waived via CC0.
+MIT License [link.](https://github.com/SamuelLJackson/AngelHackTeam/blob/master/LICENSE)

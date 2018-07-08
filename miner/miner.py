@@ -11,7 +11,7 @@ from Naked.toolshed.shell import execute_js, muterun_js, run_js
 
 public_address = "0xe010ac6e0248790e08f42d5f697160dedf97e024";
 private_key = "3a10b4bc1258e8bfefb95b498fb8c0f0cd6964a811eabca87df5630bcacd7216";
-contract_address = "0xe5e40e18c2da2af0287fa31d54c7bb20943f9344"
+contract_address = "0x8925103283b3016e2d3bb1b1be9c4ba957eab6b9"
 
 
 def generate_random_number():
@@ -24,10 +24,12 @@ def mine(challenge, public_address, difficulty):
 	x = 0;
 	while True:
 		x += 1;
-		difficulty = 100
 		nonce = generate_random_number()
+		print (str(challenge))
 		_string = challenge + public_address[2:] + Web3.toHex(str.encode(str(nonce)))[2:]
+		print (_string)
 		n = Web3.sha3(_string)
+		hash1 = int(n,16)
 		print ('Hash: ',hash1,'Difficulty: ',difficulty,'Nonce: ',nonce)
 		if hash1 % difficulty == 0:
 			print ('SUCESSS!!')
@@ -64,12 +66,10 @@ def masterMiner():
 def getVariables():
 	payload = {"jsonrpc":"2.0","id":3,"method":"eth_call","params":[{"to":contract_address,"data":"0x94aef022"}, "latest"]}
 	r = requests.post("https://rinkeby.infura.io/", data=json.dumps(payload));
-	print(r.content)
 	val = r.content
 	val2 = val[100:]
 	val2 = val2[:-3]
-	_challenge = val[36:99].strip()
-	print(str(_challenge.strip()));
+	_challenge = val[34:98].decode("utf-8")
 	val3 = bytes.decode(val2)
 	_difficulty = int(val3);
 	return _challenge,_difficulty;
@@ -97,8 +97,7 @@ def testHash():
 	print('n: ',n);
 	print('n_int: ', n_int);
 
-testHash();
-
+masterMiner();
 
 def working():
 	challenge = "0x6ea5c1031c390399bdeeef830f5ad748eba64ff30dfefdd1778ba9ba371478e3";

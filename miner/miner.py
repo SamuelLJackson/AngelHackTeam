@@ -26,11 +26,8 @@ def mine(challenge, public_address, difficulty):
 		x += 1;
 		difficulty = 100
 		nonce = generate_random_number()
-		_string = str(challenge + public_address.encode() + nonce.encode())
-		print ('Challenge: ',challenge,'Public Address: ',public_address,'Nonce: ',nonce);
-		print ('Encdoed Address: ',public_address.encode(),'Nonce Encode: ',nonce.encode());
-		print (Web3.toHex(_string))
-		hash1 = int(Web3.sha3(Web3.toHex(_string)),16)
+		_string = challenge + public_address[2:] + Web3.toHex(str.encode(str(nonce)))[2:]
+		n = Web3.sha3(_string)
 		print ('Hash: ',hash1,'Difficulty: ',difficulty,'Nonce: ',nonce)
 		if hash1 % difficulty == 0:
 			print ('SUCESSS!!')
@@ -88,4 +85,28 @@ def bytes_to_int(bytes):
 
     return result
 
-masterMiner();
+
+def testHash():
+	challenge = "0x6ea5c1031c390399bdeeef830f5ad748eba64ff30dfefdd1778ba9ba371478e3";
+	nonce = Web3.toHex(str.encode(str(330608)));
+	p = "0xca35b7d915458ef540ade6068dfe2f44e8fa733c";
+	string = challenge + p[2:]+ nonce[2:];
+	print(string);
+	n = Web3.sha3(string)
+	n_int = int(n,16)
+	print('n: ',n);
+	print('n_int: ', n_int);
+
+testHash();
+
+
+def working():
+	challenge = "0x6ea5c1031c390399bdeeef830f5ad748eba64ff30dfefdd1778ba9ba371478e3";
+	nonce = Web3.toHex(str.encode(str(330608)));
+	p = "0xca35b7d915458ef540ade6068dfe2f44e8fa733c";
+	string = challenge + p[2:]+ nonce[2:];
+	print(string);
+	n = Web3.sha3(string)
+	n_int = int(n,16)
+	print('n: ',n);
+	print('n_int: ', n_int);

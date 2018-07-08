@@ -70,7 +70,7 @@ contract OracleToken is Token {
      * @return uint The amount rewarded
      */
 
-    function proofOfWork(bytes nonce, uint value) returns (uint256) {
+    function proofOfWork(string nonce, uint value) returns (uint256) {
         bytes32 n = sha3(currentChallenge,msg.sender,nonce); // generate random hash based on input
         if (uint(n) % difficulty !=0) revert();
         uint timeSinceLastProof = (now - timeOfLastProof); // Calculate time since last reward

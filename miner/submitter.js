@@ -17,7 +17,7 @@ console.log('Value submitted: ',value,'              ')
   var address = process.argv[4];
   var abi = json.abi;
   var account = process.argv[5];
-  var privateKey = new Buffer('3a10b4bc1258e8bfefb95b498fb8c0f0cd6964a811eabca87df5630bcacd7216', 'hex');
+  var privateKey = new Buffer('fe5f52e7e0381448fe7d4a99e409b6da987b31362125ccb7bca781949cf61710', 'hex');
   web3.eth.getTransactionCount(account, function (err, nonce) {
     console.log(web3.toHex(solution))
     var data = web3.eth.contract(abi).at(address).proofOfWork.getData(web3.toHex(solution),value);

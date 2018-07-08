@@ -1,7 +1,7 @@
 ![Header Image](https://github.com/SamuelLJackson/AngelHackTeam/blob/master/MOCHeader.PNG)
 
 ## Overview
-<b>"Minable Oracle Contract" (MOC)</b> is an oracle schema that implements a mineable proof of work (POW) competiton.  Once aggregated, validated, and processed into a consumable output, these oracle data entries will be internally referred to as 'truthpoints'.  
+<b>"Minable Oracle Contract" (MOC)</b> is an oracle schema that implements a mineable proof of work (POW) competiton.  Once aggregated, validated, and processed into a consumable output - these oracle data entries will be internally referred to as 'truthpoints'.  
 
 This project draws high-level inspiration from the [EIP918 Mineable Token](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-918.md) as an abstract standard that uses a challenge-driven keccak256 Proof of Work algorithm for token minting and distribution.  
 
@@ -12,13 +12,15 @@ MOC leverages a proven game-theoretical competition to disintermediate and decen
 To summarize, by creating an oracle schema that uses an incented construct to derive the validity of off-chain data, we:
   1. <b>Reduce the risks</b> associated with single-party oracle providers, who can cut access to API data, forge message data, etc
   2. <b>Lay the foundation</b> for a superior oracle system where truth data is derived from a distributed set of participants which have both economic interest and 'stake' in the validity and success of the oracle data
-  3. <b>Create</b> an effective, secure, and decentralized oracle system which inputs data from multiple parties and disincentives dispersion and adversarial submissions
+  3. <b>Create</b> an effective, secure, and incentivized system for off-chain data which ingests inputs from a signifigant sample of parties and disincentives dispersion and adversarial submissions
 
 
 ## How It Works
-Users engage in a POW competion to find a nonce which satisifies the requirement of the challenge.  The users who find a nonce which correctly solves the POW puzzle input data for the POW Oracle contract and recieve native tokens in exchange for their work.  The oracle data submissions are stored in contract memory as an array - which is subsequently operated upon to derive the median for the sample. In this implementation the amount of samples recorded may be stated as N=5.  
+Users engage in a POW competition to find a nonce which satisfies the requirement of the challenge.  The users who find a nonce which correctly solves the POW puzzle input data for the POW Oracle contract and receive native tokens in exchange for their work.  The oracle data submissions are stored in contract memory as an array - which is subsequently operated upon to derive the median for the sample. In this implementation the amount of samples recorded may be stated as N=5.  
 
-Each datapoint is expressed as an integer with a median timestamp describing the point in time that the oracle truth corresponds to.  On average, these oracle truths are mined and recorded at an interval dynamically adjusted to correspond to the total work inputted - so that truthpoints (represented as values stored for P sub n variables) may be expressed in a timeseries array fed into another contract, or visualized in a front-end through an event.
+Each input value is expressed as an integer with a median timestamp describing the point in time that the oracle truth corresponds to.  On average, these oracle truths are mined and recorded at an interval dynamically adjusted to correspond to the total work inputted - so that truthpoints (represented as values stored for P sub n variables) may be expressed in a timeseries array fed into another contract, or visualized in a front-end through an event (see UX section for an example).
+
+To ensure scalability and maximize usage potential, the smart-contract has been designed ground-up using the principle of 'gas-minimization'.  The contract is currently deployed on the both the Kovan and Rinkeby Ethereum testnets. We encourage testing, security auditing, and UX critiques.
 
 
 ### The Oracle Mining Process
@@ -59,7 +61,7 @@ An implementation of the miner is descrbed in python in the 'miner' sub director
 
 
 ### Reward Incentives in MOC
-The Reward schema is an essential component of MOC.  The schema is designed to inventivize miners to input <i>valid</i> truthpoints - as outlying datapoints in the sample receieve proportionaly less reward than the median input.
+The Reward schema is an essential component of MOC.  The schema is designed to incentivize miners to input <i>valid</i> truthpoints - as outlying datapoints in the sample receive proportionally less reward than the median input.
 
 This Reward schema is expressed in the contract, here:
 
@@ -92,13 +94,39 @@ As MOC is a contract mechanism that allows oracle data to be derived in a comept
 6. <b>Damage verification:</b> What were the net total results in damage for insurance contracts
 7. <b>Pseudorandom number generation:</b> to select a winner in a distributed-lottery smart contract, etc.
 
+
 ## Visualizing the Output (UX)
 
-   website clickthrough gifs go here
+To create a proper web UX for MOC, we have created a basic web3 portal which includes a project description coupled with live contract getters and visualizations.  Our current build leverages Truffle and Web3.js to interface with the Rinkeby and Kovan testnets through remote procedure calls (RPC). In addition, we have elected to use React Framework to style and visualize the state attributes within an enabled web3 browser.
+
+The MOC website is currently hosted (here)[localhost:8548], and may be deployed locally by building the repositry.
+
+The web portal provides a way for users to pull state data from the MOC.  In this example, users can check the data for a sample distribution of miners who input the Bitcoin/USD exchange rate.  They may also view the current POW challenge level (as well as the difficulty).  Below this, the web portal arranges the set of truthpoints for the USD/BTC exchange rate into a graph visual.
+
+To interact with the smart-contract, we reccomend using an ingested web3 environment (like MetaMask).  Data is pulled from the Rinkeby contract address listed below.  
+
+For reference purposes, we have included a few sample loops for the UX below.
+
+![UX Overview][https://github.com/SamuelLJackson/AngelHackTeam/blob/master/MOCgif.gif]
+
+Rinkeby Contract Address:  '0x34f65d2d9da5022592ba7e921783b9f5b1697333'
+
+To view transaction history, [see Etherscan](https://rinkeby.etherscan.io/address/0x34f65d2d9da5022592ba7e921783b9f5b1697333)
+
 
 ## Conclusion
 
-lorem ipsum
+We are happy to report that a successful MOC build has successfully compiled and been deployed to the Rinkeby and Kovan Ethereum testnets. 
 
-### Copyright
-Copyright and related rights waived via CC0.
+This project was a submission to <b>Angel Hack's Washington DC Hackathon</b> hosted on July 7th - 8th.  It was designed, spec'ed, built, and deployed in a 24-hour agile sprint.
+
+<i>We invite you</i> to audit and test our project - and submit any issues to the repo directly.
+
+
+#### Contributers
+
+Nicholas Fett (nfett@decentralizedderivatives.org), Kevin Leffew (kleffew94@gmail.com), Sam Everett (severett29@gmail.com), Brenda Loya (bloya@decentralizedderivatives.org), Lucian Stroie (luciandstroie@gmail.com)
+
+
+#### Copyright
+MIT License [link.](https://github.com/SamuelLJackson/AngelHackTeam/blob/master/LICENSE)

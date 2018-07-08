@@ -9,9 +9,9 @@ import requests,json, time,random
 import pandas as pd
 from Naked.toolshed.shell import execute_js, muterun_js, run_js
 
-public_address = "0xe010ac6e0248790e08f42d5f697160dedf97e024";
-private_key = "3a10b4bc1258e8bfefb95b498fb8c0f0cd6964a811eabca87df5630bcacd7216";
-contract_address =  "0x3ce33bc3ebe0358eeb8e4a9f0ebcd7df4fea6bfc"
+public_address = "0xb204edaf0410675e00e6c8a7e448a9e8e2db69aa";
+private_key = "fe5f52e7e0381448fe7d4a99e409b6da987b31362125ccb7bca781949cf61710";
+contract_address =  "0x9027f18618375c32018a0dd632ce15a21910adb5"
 
 
 def generate_random_number():
@@ -49,7 +49,7 @@ def getAPIvalue():
 
 # In[58]:
 def masterMiner():
-	#while True:
+	while True:
 		challenge,difficulty = getVariables();
 		print(challenge,difficulty);
 		nonce = mine(challenge,public_address[2:],difficulty);
@@ -59,6 +59,7 @@ def masterMiner():
 			value = getAPIvalue();
 			arg_string =""+ str(nonce) + " "+str(value)+" "+str(contract_address)+" "+str(public_address)
 			run_js('submitter.js',arg_string);
+			time.sleep(30)
 		else:
 			pass
 # In[59]:

@@ -27,7 +27,7 @@ contract OracleToken is Token {
  
 
     /*Events*/
-    event Mine(address indexed to, uint value);
+    event Mine(address indexed to,uint _time, uint value);
     event NewValue(address _miner, uint _value);
 
     /*Functions*/
@@ -70,38 +70,36 @@ contract OracleToken is Token {
      * @return uint The amount rewarded
      */
 
-    function proofOfWork(string nonce, uint value) returns (uint256) {
+    function proofOfWork(string nonce, uint value) returns (uint256,uint256) {
         bytes32 n = sha3(currentChallenge,msg.sender,nonce); // generate random hash based on input
         if (uint(n) % difficulty !=0) revert();
-        uint timeSinceLastProof = (now - timeOfLastProof); // Calculate time since last reward
-        if (timeSinceLastProof < 5 seconds) revert(); // Do not reward too quickly
-        difficulty = difficulty * 30 seconds / timeSinceLastProof + 1; // Adjusts the difficult
         timeOfLastProof = now - (now % 60);
-        if (count<5) {
-           first_five[count] = Details({
+        count++;
+        if (count<=5) {
+           first_five[count-1] = Details({
                 value: value,
                 miner: msg.sender
             });  
            emit NewValue(msg.sender,value);
         } 
-        if(count==5) {
+        if(count == 5) {
             pushValue(timeOfLastProof);
-            emit Mine(msg.sender, value); // execute an event reflecting the change
+            emit Mine(msg.sender,timeOfLastProof, value); // execute an event reflecting the change
+            count = 0;
         }
         else {
         currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1)); // Save hash for next proof
         }
-        count++;
-        return (count);
+        return (count,timeOfLastProof);
     }
 
     function pushValue(uint _time) internal {
         quickSort(first_five,0,4);
-        transfer(first_five[2].miner, 10); // reward to winner grows over time
-        transfer(first_five[1].miner, 5); // reward to winner grows over time
-        transfer(first_five[3].miner, 5); // reward to winner grows over time
-        transfer(first_five[0].miner, 1); // reward to winner grows over time
-        transfer(first_five[4].miner, 1); // reward to winner grows over time
+        iTransfer(first_five[2].miner, 10); // reward to winner grows over time
+        iTransfer(first_five[1].miner, 5); // reward to winner grows over time
+        iTransfer(first_five[3].miner, 5); // reward to winner grows over time
+        iTransfer(first_five[0].miner, 1); // reward to winner grows over time
+        iTransfer(first_five[4].miner, 1); // reward to winner grows over time
         values[_time] = first_five[2].value;
     }
 

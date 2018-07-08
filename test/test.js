@@ -3,33 +3,31 @@ var oracleToken = artifacts.require("OracleToken");
 
 contract('Base Tests', function(accounts) {
   let oracletoken;
-console.log("base");
+  
+
   beforeEach('Setup contract for each test', async function () {
      oracletoken = await oracleToken.new();
-      console.log("0");
   });
 
   it("Set difficulty", async function(){
     await oracletoken.setDifficulty(1);
     let variables = await oracletoken.getVariables(); 
-    console.log(variables);
     assert(variables = [0x0000000000000000000000000000000000000000000000000000000000000000,1] , "Diffiuculty= 1");
   });
 
   it("testAdd", async function(){
     await oracletoken.testAdd(1531008000,100);
     let data = await oracletoken.retrieveData(1531008000); 
-    console.log(data);
     assert(data = 100 , "data=100");
   });
 
   it("Token Transfer", async function(){
-    balance2 = await (oracletoken.balanceOf(accounts[2]));
-    console.log(balance2);
-    await oracletoken.transfer(accounts[2], 5);
-    balance2x = await (oracletoken.balanceOf(accounts[2]));
-    console.log(balance2x);
-    assert(balance2-balance2x == 5 , "5");
+    // balance2 = await (oracletoken.balanceOf(accounts[2]));
+    // console.log(balance2);
+    // await oracletoken.transfer(accounts[2], 5);
+    // balance2x = await (oracletoken.balanceOf(accounts[2]));
+    // console.log(balance2x);
+    // assert(balance2-balance2x == 5 , "5");
   });
 
 
@@ -45,15 +43,27 @@ console.log("base");
 
     it("proofOfWork", async function(){
     
-    balance2 = await (oracletoken.balanceOf(accounts[2]));
-    console.log(balance2);
 /*  balance3 = await (oracletoken.balanceOf(accounts[3]));
     balance4 = await (oracletoken.balanceOf(accounts[4]));
     balance5 = await (oracletoken.balanceOf(accounts[5]));
     balance6 = await (oracletoken.balanceOf(accounts[6]));*/
     console.log("1 proof of work");
-    await oracletoken.proofOfWork(1531005060, 100, {from: accounts[2]});
+    await oracletoken.proofOfWork("1531005060", 100, {from: accounts[0]});
+    await oracletoken.proofOfWork("1531005060", 100, {from: accounts[0]});
+    await oracletoken.proofOfWork("1531005060", 100, {from: accounts[0]});
+    await oracletoken.proofOfWork("1531005060", 100, {from: accounts[0]});
+    let res = await oracletoken.proofOfWork("1531005060", 100, {from: accounts[0]});
+    //  res = res.logs[0].args;
+
+     res = res.logs[6].args._time
+          console.log(res);
+     let data = await oracletoken.retrieveData(res); 
+    assert(data = 100 , "data=100");
+    balance2x = await (oracletoken.balanceOf(accounts[0]));
+    console.log(balance2x);
+
      console.log("2 proof of work");
+
 /*    await oracletoken.setDifficulty(1,{from: accounts[1]});
      console.log("3");
     await oracletoken.proofOfWork(1531005120, 101, {from: accounts[3]});

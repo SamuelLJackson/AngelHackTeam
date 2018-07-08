@@ -17,6 +17,7 @@ contract Token  {
      */
     constructor() public{
         owner = msg.sender;
+        total_supply = 21000000;
         balances[address(this)] = total_supply;
     }
 
@@ -41,6 +42,19 @@ contract Token  {
             balances[msg.sender] = balances[msg.sender] - _amount;
             balances[_to] = balances[_to] + _amount;
             emit Transfer(msg.sender, _to, _amount);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+        function iTransfer(address _to, uint _amount) internal returns (bool) {
+        if (balances[address(this)] >= _amount
+        && _amount > 0
+        && balances[_to] + _amount > balances[_to]) {
+            balances[address(this)] = balances[address(this)] - _amount;
+            balances[_to] = balances[_to] + _amount;
+            emit Transfer(address(this), _to, _amount);
             return true;
         } else {
             return false;

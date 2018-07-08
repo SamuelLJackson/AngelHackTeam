@@ -9,6 +9,8 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
+import {Button,Grid,Row} from 'react-bootstrap'
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -27,7 +29,10 @@ class App extends Component {
     getWeb3
     .then(results => {
       this.setState({
-        web3: results.web3
+        web3: results.web3,
+        etherValue: null,
+        challengeValue: null,
+        difficultyValue: null
       })
 
       // Instantiate contract once web3 provided.
@@ -51,16 +56,31 @@ class App extends Component {
     const oracleToken = contract(OracleTokenContract)
     oracleToken.setProvider(this.state.web3.currentProvider)
 
-    // Declaring this for later so we can chain functions on SimpleStorage.
+    //use this to get current epoch
+    var ts = Math.round((new Date()).getTime() / 1000);
+
+
     var oracleTokenInstance
+    this.state.web3.eth.getAccounts( async(error, accounts) => {
+      const instance = await oracleToken.at(
+        '0xe5e40e18c2da2af0287fa31d54c7bb20943f9344'
+      ).retrieveData(1531008000, {from: accounts[0]})
+      .then((result) => {
+        let tempNum2 = result - 0;
+        return this.setState({etherValue: tempNum2})
+      })
+    })
 
     // Get accounts.
     this.state.web3.eth.getAccounts(async(error, accounts) => {
       const instance = await oracleToken.at(
-        '0x2b63d6e98e66c7e9fe11225ba349b0b33234d9a2'
+        '0xe5e40e18c2da2af0287fa31d54c7bb20943f9344'
       ).getVariables({from: accounts[0]})
       .then((result) => {
-          return this.setState({challengeValue: result})
+        let challenge = result[0] - 0
+        let difficulty = result[1] - 0
+        
+          return this.setState({challengeValue: challenge, difficultyValue: difficulty})
       });
     })
   }
@@ -145,6 +165,35 @@ class App extends Component {
       chart.data.labels = data.labels;
       chart.update();
   }
+  getNewValue(){
+    const contract = require('truffle-contract')
+    const oracleToken = contract(OracleTokenContract)
+    oracleToken.setProvider(this.state.web3.currentProvider)
+    var ts = Math.round((new Date()).getTime() / 1000);
+    this.state.web3.eth.getAccounts( async(error, accounts) => {
+      const instance = await oracleToken.at(
+        '0xe5e40e18c2da2af0287fa31d54c7bb20943f9344'
+      ).retrieveData(1531008000, {from: accounts[0]})
+      .then((result) => {
+        let tempNum2 = result - 0;
+        return this.setState({etherValue: tempNum2})
+      })
+    })
+
+    // Get accounts.
+    this.state.web3.eth.getAccounts(async(error, accounts) => {
+      const instance = await oracleToken.at(
+        '0xe5e40e18c2da2af0287fa31d54c7bb20943f9344'
+      ).getVariables({from: accounts[0]})
+      .then((result) => {
+        let challenge = result[0] - 0
+        let difficulty = result[1] - 0
+        
+          return this.setState({challengeValue: challenge, difficultyValue: difficulty})
+      });
+    })
+
+  }
   render() {
     let imgUrl = 'https://new.consensys.net/wp-content/themes/consensys/client/images/masthead-organic-poster.jpg';
     let minerImageUrl = 'https://media.istockphoto.com/vectors/cartoon-dwarf-miner-vector-id839970312';
@@ -154,28 +203,32 @@ class App extends Component {
         <nav className="navbar pure-menu pure-menu-horizontal">
             <a href="#" className="pure-menu-heading pure-menu-link">Token Bones</a>
         </nav>
-        <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-            <div style={{backgroundImage: 'url(' + imgUrl + ')',
-                  height:800,
-                  width:'100%',
-                  display:'flex',
-                  justifyContent:'center'}}>
-              <h1 style={{
-                color:'white',
-                alignSelf:'center'
-                }}>Minable Oracle Contract</h1>
-            </div>
-
-            <h3>Ether to USD value</h3>
-            <canvas ref={'chart'} height={'400'} width={'600'}></canvas>
-            <h3>What is it?</h3>
-            <h3>How does it work?</h3>
-            <h3>Download a miner!</h3>
-            </div>
+        <div className="container-fluid">
+          <div style={{backgroundImage: 'url(' + imgUrl + ')',
+                height:800,
+                width:'100%',
+                display:'flex',
+                justifyContent:'center'}}>
+            <h1 style={{
+              color:'white',
+              alignSelf:'center'
+              }}>Minable Oracle Contract</h1>
+            <h1 style={{
+              color:'white',
+              alignSelf:'center'
+              }}>MOC Token</h1>
           </div>
-        </main>
+
+          <h3>Ether to USD value</h3>
+          <h3>Current Value: ${this.state.etherValue}</h3>
+          <h3>Challenge: {this.state.challengeValue}</h3>
+          <h3>Difficulty: {this.state.difficultyValue}</h3>
+          <Button bsStyle="info" onClick={this.getNewValue.bind(this)}>Get current value</Button>
+          <canvas ref={'chart'} height={'400'} width={'600'}></canvas>
+          <h3>What is it?</h3>
+          <h3>How does it work?</h3>
+          <h3>Download a miner!</h3>
+        </div>
       </div>
 
     );

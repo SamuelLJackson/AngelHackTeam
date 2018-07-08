@@ -11,7 +11,7 @@ from Naked.toolshed.shell import execute_js, muterun_js, run_js
 
 public_address = "0xe010ac6e0248790e08f42d5f697160dedf97e024";
 private_key = "3a10b4bc1258e8bfefb95b498fb8c0f0cd6964a811eabca87df5630bcacd7216";
-contract_address = "0x8925103283b3016e2d3bb1b1be9c4ba957eab6b9"
+contract_address =  "0x3ce33bc3ebe0358eeb8e4a9f0ebcd7df4fea6bfc"
 
 
 def generate_random_number():

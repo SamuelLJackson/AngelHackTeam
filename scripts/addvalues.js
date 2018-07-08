@@ -1,7 +1,7 @@
 
 var OracleToken = artifacts.require("OracleToken");
 var _OracleToken = "0xe5e40e18c2da2af0287fa31d54c7bb20943f9344";
-var _date = (Date.now()/1000- (Date.now()/1000)%3600);
+var _date = (Date.now()/1000- (Date.now()/1000)%60);
 
 module.exports =async function(callback) {
     var count= 20;

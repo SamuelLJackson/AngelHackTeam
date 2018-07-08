@@ -24,12 +24,17 @@ def mine(challenge, public_address, difficulty):
 	x = 0;
 	while True:
 		x += 1;
+		difficulty = 100
 		nonce = generate_random_number()
-		_string = str(challenge.strip())+ public_address +str(nonce)
-		print (_string);
-		hash1 = int(Web3.sha3(_string))
+		_string = str(challenge + public_address.encode() + nonce.encode())
+		print ('Challenge: ',challenge,'Public Address: ',public_address,'Nonce: ',nonce);
+		print ('Encdoed Address: ',public_address.encode(),'Nonce Encode: ',nonce.encode());
+		print (Web3.toHex(_string))
+		hash1 = int(Web3.sha3(Web3.toHex(_string)),16)
+		print ('Hash: ',hash1,'Difficulty: ',difficulty,'Nonce: ',nonce)
 		if hash1 % difficulty == 0:
-			return nonce;
+			print ('SUCESSS!!')
+			return int(nonce);
 		if x % 10000 == 0:
 			_challenge,_difficulty = getVariables();
 			if _challenge == challenge:
@@ -40,18 +45,16 @@ def mine(challenge, public_address, difficulty):
 def getAPIvalue():
 	url = "https://api.gdax.com/products/BTC-USD/ticker"
 	response = requests.request("GET", url)
-	price = response.json()['price'] 
-	print(price)
-	return price
+	price =response.json()['price']
+	return int(float(price))
 
 # In[58]:
 def masterMiner():
-	while True:
+	#while True:
 		challenge,difficulty = getVariables();
 		print(challenge,difficulty);
 		nonce = mine(challenge,public_address[2:],difficulty);
 		print(nonce);
-		'''
 		if(nonce > 0):
 			print ("You guessed the hash");
 			value = getAPIvalue();
@@ -59,7 +62,6 @@ def masterMiner():
 			run_js('submitter.js',arg_string);
 		else:
 			pass
-		'''
 # In[59]:
 
 def getVariables():

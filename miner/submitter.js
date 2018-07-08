@@ -17,7 +17,7 @@ console.log('Value submitted: ',value,'              ')
   var address = process.argv[4];
   var abi = json.abi;
   var account = process.argv[5];
-  var privateKey = new Buffer('fe5f52e7e0381448fe7d4a99e409b6da987b31362125ccb7bca781949cf61710', 'hex');
+  var privateKey = new Buffer('5950276AE1F0A8D3E45D19C2B709E172A7F1EF921F2E2E2C890834C3A42499C1', 'hex');
   web3.eth.getTransactionCount(account, function (err, nonce) {
     console.log(web3.toHex(solution))
     var data = web3.eth.contract(abi).at(address).proofOfWork.getData(web3.toHex(solution),value);
@@ -26,7 +26,7 @@ console.log('Value submitted: ',value,'              ')
     var tx = new Tx({
       nonce: nonce,
       gasPrice: web3.toHex(web3.toWei('20', 'gwei')),
-      gasLimit: 100000,
+      gasLimit: 1000000,
       to: address,
       value: 0,
       data: data,

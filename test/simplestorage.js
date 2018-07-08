@@ -9,7 +9,39 @@ console.log("base");
       console.log("0");
   });
 
-  it("proofOfWork", async function(){
+  it("Set difficulty", async function(){
+    await oracletoken.setDifficulty(1);
+    let variables = await oracletoken.getVariables(); 
+    console.log(variables);
+    assert(variables = [0x0000000000000000000000000000000000000000000000000000000000000000,1] , "Diffiuculty= 1");
+  });
+
+  it("testAdd", async function(){
+    await oracletoken.testAdd(1531008000,100);
+    let data = await oracletoken.retrieveData(1531008000); 
+    console.log(data);
+    assert(data = 100 , "data=100");
+  });
+
+  it("Token Transfer", async function(){
+    balance2 = await (oracletoken.balanceOf(accounts[2]));
+    console.log(balance2);
+    await oracletoken.transfer(accounts[2], 5);
+    balance2x = await (oracletoken.balanceOf(accounts[2]));
+    console.log(balance2x);
+    assert(balance2-balance2x == 5 , "5");
+  });
+  it("Token Approval and Transfer", async function(){
+
+  });
+  it("Sample Mine Token", async function(){
+
+  });
+  it("Mine tokens and get 20 values", async function(){
+    
+  });
+
+    it("proofOfWork", async function(){
     
     balance2 = await (oracletoken.balanceOf(accounts[2]));
 /*    balance3 = await (oracletoken.balanceOf(accounts[3]));
@@ -46,19 +78,5 @@ console.log("base");
     assert.equal(balance3-balance3x, 10, "balance should be one for acct3");
   */});
 
-
-
-  it("Token Transfer", async function(){
-
-  });
-  it("Token Approval and Transfer", async function(){
-
-  });
-  it("Sample Mine Token", async function(){
-
-  });
-  it("Mine tokens and get 20 values", async function(){
-    
-  });
 
 });
